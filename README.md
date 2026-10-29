@@ -1,3 +1,5 @@
+> Video host fork: `develop` carries the pinned Video integration. New browser sessions preserve the host UI; open DS Bot from the sidebar. See [host package instructions](ds-bot/HOST-INTEGRATION.md).
+
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="docs/images/logo-dark.svg">

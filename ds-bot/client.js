@@ -10423,9 +10423,9 @@ function freePriority(entries2, { priority, key, id }) {
 }
 function readMode(storage = globalThis.localStorage) {
   try {
-    return storage.getItem(STORAGE.surface) === "agent" ? "agent" : "bot";
+    return storage.getItem(STORAGE.surface) === "bot" ? "bot" : "agent";
   } catch {
-    return "bot";
+    return "agent";
   }
 }
 function writeMode(mode, storage = globalThis.localStorage) {

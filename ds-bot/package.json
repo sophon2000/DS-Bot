@@ -1,6 +1,6 @@
 {
   "name": "ds-bot",
-  "version": "0.2.3",
+  "version": "0.2.3-vh.1",
   "description": "DS Bot: a team of long-lived Bots for DeepSeek Harness, with Main Bots, Bot-to-Bot messages and group chats",
   "keywords": [
     "dsh-plugin",
@@ -11,13 +11,13 @@
     "multi-agent",
     "agents"
   ],
-  "homepage": "https://github.com/Fei2411/DS-Bot#readme",
+  "homepage": "https://github.com/sophon2000/DS-Bot#readme",
   "bugs": {
-    "url": "https://github.com/Fei2411/DS-Bot/issues"
+    "url": "https://github.com/sophon2000/DS-Bot/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Fei2411/DS-Bot.git",
+    "url": "git+https://github.com/sophon2000/DS-Bot.git",
     "directory": "ds-bot"
   },
   "license": "Apache-2.0",
@@ -27,7 +27,8 @@
     ".": "./index.js",
     "./client": "./client.js",
     "./web-search": "./web-search.js",
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./host-package": "./scripts/host-package.mjs"
   },
   "files": [
     "index.js",
@@ -37,20 +38,25 @@
     "web-search.js",
     "cordis.patch.yml",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "NOTICE",
+    "host-package.json",
+    "scripts/host-package.mjs",
+    "HOST-INTEGRATION.md"
   ],
   "scripts": {
     "build": "node scripts/build-client.mjs",
     "test": "node --import ./test/harness-resolve.mjs --test \"test/*.test.js\"",
     "lint": "node scripts/lint.mjs",
     "harness": "npm install --prefix dev/harness --legacy-peer-deps=false --no-package-lock --no-fund --no-audit",
-    "check": "sh dev/check.sh"
+    "check": "sh dev/check.sh",
+    "pack:host": "node scripts/host-package.mjs prepare"
   },
   "peerDependencies": {
-    "@deepseek-ai/cordis": "*",
-    "@deepseek-ai/dsh-llm": "*",
-    "@deepseek-ai/dsh-tools": "*",
-    "@deepseek-ai/dsh-web": "*"
+    "@deepseek-ai/cordis": "4.0.5",
+    "@deepseek-ai/dsh-llm": "0.2.1-rc.2.vh.11.local.20261026.1",
+    "@deepseek-ai/dsh-tools": "0.2.1-rc.2.vh.11.local.20261026.1",
+    "@deepseek-ai/dsh-web": "0.2.1-rc.2.vh.11.local.20261026.1"
   },
   "dsh": {
     "client": {
@@ -61,6 +67,7 @@
     }
   },
   "devDependencies": {
-    "esbuild": "0.28.2"
+    "esbuild": "0.28.2",
+    "tar": "7.5.22"
   }
 }

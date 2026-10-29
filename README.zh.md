@@ -1,3 +1,5 @@
+> Video 宿主 fork：`develop` 维护固定版本的 Video 接入。首次打开保留宿主界面，可从侧栏进入 DS Bot。接入、构建和校验见 [Host package 说明](ds-bot/HOST-INTEGRATION.md)。
+
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="docs/images/logo-dark.svg">

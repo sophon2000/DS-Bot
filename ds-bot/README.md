@@ -1,5 +1,7 @@
 # ds-bot
 
+> This Video host fork changes bundle composition and the initial interface mode. See [HOST-INTEGRATION.md](HOST-INTEGRATION.md) for the pinned build and installation path.
+
 The DS Bot plugin for [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) (dsh). It turns dsh into a team of long-lived Bots that talk to you, to each other and in group chats. See the [project page](../README.md) for an overview, install steps and screenshots.
 
 > Early release (v0.1). Features, tools and the saved data format can still change.

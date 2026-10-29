@@ -86,7 +86,8 @@ export function freePriority(entries, { priority, key, id }) {
 }
 
 export function readMode(storage = globalThis.localStorage) {
-  try { return storage.getItem(STORAGE.surface) === 'agent' ? 'agent' : 'bot' } catch { return 'bot' }
+  // Video host integration: keep the host workspace visible until Bot mode is chosen.
+  try { return storage.getItem(STORAGE.surface) === 'bot' ? 'bot' : 'agent' } catch { return 'agent' }
 }
 
 export function writeMode(mode, storage = globalThis.localStorage) {

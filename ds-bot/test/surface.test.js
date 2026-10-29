@@ -14,20 +14,20 @@ test('a plain Bot-mode view keeps the shell but drops the conversation', () => {
   assert.deepEqual(groupsFor({ mode: 'bot', plain: true }), { shell: true, conversation: false })
 })
 
-test('the saved surface mode survives reloads and defaults to bot', () => {
+test('the saved surface mode survives reloads and keeps the host visible by default', () => {
   const store = new Map()
   const storage = {
     getItem: key => (store.has(key) ? store.get(key) : null),
     setItem: (key, value) => store.set(key, value),
     removeItem: key => store.delete(key),
   }
-  assert.equal(readMode(storage), 'bot')
+  assert.equal(readMode(storage), 'agent')
   writeMode('agent', storage)
   assert.equal(readMode(storage), 'agent')
   writeMode('bot', storage)
   assert.equal(readMode(storage), 'bot')
   store.set(STORAGE.surface, 'nonsense')
-  assert.equal(readMode(storage), 'bot')
+  assert.equal(readMode(storage), 'agent')
 })
 
 const recordingGroups = (log, { failing = null } = {}) => {
@@ -169,6 +169,6 @@ test('a shadow goes below every entry of its cell, so a same-priority plugin doe
   assert.equal(freePriority([entry({ priority: -100 })], {}), undefined)
 })
 
-test('readMode falls back to bot when storage throws', () => {
-  assert.equal(readMode({ getItem: () => { throw new Error('denied') } }), 'bot')
+test('readMode keeps the host visible when storage throws', () => {
+  assert.equal(readMode({ getItem: () => { throw new Error('denied') } }), 'agent')
 })
