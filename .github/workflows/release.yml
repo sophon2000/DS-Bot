@@ -15,8 +15,6 @@ name: Release
 # "latest" stays on the last stable version.
 
 on:
-  release:
-    types: [published]
   workflow_dispatch:
     inputs:
       dry_run:
