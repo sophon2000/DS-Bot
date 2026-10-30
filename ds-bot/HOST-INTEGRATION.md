@@ -1,7 +1,7 @@
 # Video host package
 
 This fork's `develop` branch carries the Video integration of upstream DS Bot
-`4a7b55069ad300eae8be42a74f31bc170b40ead7`. Package `0.2.3-vh.1` targets DSH
+`4a7b55069ad300eae8be42a74f31bc170b40ead7`. Package `0.2.3-vh.2` targets DSH
 `0.2.1-rc.2.vh.11.local.20261026.1`; it does not include or update DSH.
 
 The bundle mounts only `ds-bot`, with update checks disabled. The existing
@@ -11,6 +11,10 @@ where the host's workspace and conversation UI remain visible. The sidebar's
 uses DS Bot's own sidebar and conversation UI. Bot sessions retain the upstream
 standard preset; selecting a working directory does not grant Video project
 permissions.
+
+Image-to-text fallback belongs only to current Bot chat and group-member Sessions.
+Ordinary Host Sessions retain the Host's image-capability policy and do not trigger
+Bot OCR calls or cache writes when selecting a text-only model.
 
 Install build dependencies with `npm ci` in `ds-bot/`. The existing `.npmrc`
 disables peer auto-installation: tests consume an already installed DSH through
