@@ -35,13 +35,22 @@ const harness = findHarness()
 process.env.DSH_HARNESS = harness
 // A checkout links the packages into its base bundle; an npm install has them at its root.
 const base = resolve(harness, 'packages/bundle/base/package.json')
-const anchor = pathToFileURL(existsSync(base) ? base : resolve(harness, 'package.json')).href
+const anchors = [base, join(harness, 'packages/bundle/web-app/package.json'), join(harness, 'apps/cli/package.json'), resolve(harness, 'package.json')]
+  .filter(file => existsSync(file)).map(file => pathToFileURL(file).href)
 const pluginUrl = `${pathToFileURL(plugin).href}/`
 
 registerHooks({
   resolve(specifier, context, nextResolve) {
-    if (specifier.startsWith('@deepseek-ai/') && context.parentURL?.startsWith(pluginUrl)) {
-      return nextResolve(specifier, { ...context, parentURL: anchor })
+    if (specifier.startsWith('@deepseek-ai/') && (context.parentURL?.startsWith(pluginUrl) || anchors.includes(context.parentURL))) {
+      let missing
+      for (const anchor of anchors) {
+        try { return nextResolve(specifier, { ...context, parentURL: anchor }) }
+        catch (error) {
+          if (!['ERR_MODULE_NOT_FOUND', 'MODULE_NOT_FOUND'].includes(error.code)) throw error
+          missing ??= error
+        }
+      }
+      throw missing
     }
     return nextResolve(specifier, context)
   },

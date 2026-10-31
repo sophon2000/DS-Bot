@@ -1,3 +1,5 @@
+Current source candidate: `ds-bot@0.2.3-vh.3`, exact DSH `0.2.2-alpha.2.vh.1.local.20261031.1` and Cordis `4.0.6-alpha.1`. The archive must be regenerated and verified against that Host; earlier Host qualification is not reused.
+
 # Video host package
 
 This fork's `develop` branch carries the Video integration of upstream DS Bot
@@ -15,8 +17,9 @@ permissions.
 Install build dependencies with `npm ci` in `ds-bot/`. The existing `.npmrc`
 disables peer auto-installation: tests consume an already installed DSH through
 `DSH_HARNESS`. For a pnpm installation, set it to the real directory of the
-installed `@deepseek-ai/dsh` package. The test resolver uses that package's
-dependencies. Lint requires an existing oxlint installation; point
+installed `@deepseek-ai/dsh` package. For a source checkout the test resolver
+uses the base, web and CLI bundle dependencies; an installed archive uses the
+CLI package dependencies. Lint requires an existing oxlint installation; point
 `DSH_HARNESS` to that installation for `npm run lint`.
 
 After `npm test`, `npm run lint`, and `node scripts/build-client.mjs --check`
@@ -46,3 +49,11 @@ normal starts consume the resulting immutable archive, not a source link.
 The artifact is reproducible from the same clean commit, fixed pnpm and installed
 host packages. The release archive is published separately after integration
 tests; a package receipt alone does not certify live-model or UI behavior.
+
+Candidate source checks on 2026-10-31 used the built master-upgrade checkout:
+`build-client --check`, lint, the five host-package tests and all 26 tests in
+the four migrated Host API suites passed. The full suite reported 1125 passed,
+2 skipped and 3 blocked by this execution environment rejecting local HTTP
+listeners (`listen EPERM`); these were the two mock-model tests and the
+credential-bearing redirect test. This is source migration evidence, pending
+checks against the installed immutable Host archive.

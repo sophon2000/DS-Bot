@@ -7,8 +7,8 @@ import { test } from 'node:test'
 import { create } from 'tar'
 import { inspectHost, packedFileDigests, verifyHostPackage } from '../scripts/host-package.mjs'
 
-const hostVersion = '0.2.1-rc.2.vh.11.local.20261026.1'
-const peers = { '@deepseek-ai/cordis': '4.0.5', '@deepseek-ai/dsh-llm': hostVersion, '@deepseek-ai/dsh-tools': hostVersion, '@deepseek-ai/dsh-web': hostVersion }
+const hostVersion = '0.2.2-alpha.2.vh.1.local.20261031.1'
+const peers = { '@deepseek-ai/cordis': '4.0.6-alpha.1', '@deepseek-ai/dsh-llm': hostVersion, '@deepseek-ai/dsh-tools': hostVersion, '@deepseek-ai/dsh-web': hostVersion }
 function fixture(t) {
   const root = mkdtempSync(join(tmpdir(), 'ds-bot host 中文 '))
   t.after(() => rmSync(root, { recursive: true, force: true }))
@@ -24,14 +24,14 @@ function fixture(t) {
   pkg('@deepseek-ai/dsh-web-app', hostVersion)
   for (const [name, version] of Object.entries(peers)) pkg(name, version)
   const plugin = join(modules, 'ds-bot')
-  write(join(plugin, 'package.json'), { name: 'ds-bot', version: '0.2.3-vh.1', peerDependencies: peers })
-  write(join(plugin, 'host-package.json'), { schemaVersion: 1, version: '0.2.3-vh.1', hostVersion, sourceCommit: 'a'.repeat(40), packages: peers })
+  write(join(plugin, 'package.json'), { name: 'ds-bot', version: '0.2.3-vh.3', peerDependencies: peers })
+  write(join(plugin, 'host-package.json'), { schemaVersion: 1, version: '0.2.3-vh.3', hostVersion, sourceCommit: 'a'.repeat(40), packages: peers })
   return { root, host, plugin, pkg, write }
 }
 
 test('the installed plugin reuses the pinned host modules', t => {
   const f = fixture(t)
-  assert.deepEqual(verifyHostPackage(f.plugin, f.host), { version: '0.2.3-vh.1', hostVersion, peers: 4 })
+  assert.deepEqual(verifyHostPackage(f.plugin, f.host), { version: '0.2.3-vh.3', hostVersion, peers: 4 })
 })
 
 test('a nested second runtime with the same version is rejected', t => {
@@ -51,7 +51,7 @@ test('host version drift and missing peers fail before packing', t => {
 
 test('a changed package peer cannot bypass the recorded binding', t => {
   const f = fixture(t)
-  f.write(join(f.plugin, 'package.json'), { name: 'ds-bot', version: '0.2.3-vh.1', peerDependencies: { ...peers, '@deepseek-ai/cordis': '*' } })
+  f.write(join(f.plugin, 'package.json'), { name: 'ds-bot', version: '0.2.3-vh.3', peerDependencies: { ...peers, '@deepseek-ai/cordis': '*' } })
   assert.throws(() => verifyHostPackage(f.plugin, f.host), /Host binding differs/)
 })
 

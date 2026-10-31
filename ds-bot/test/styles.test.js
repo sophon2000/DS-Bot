@@ -2,7 +2,7 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { createRequire } from 'node:module'
 import { dirname, join } from 'node:path'
-import { readFileSync } from 'node:fs'
+import { existsSync, readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { runInNewContext } from 'node:vm'
 import { build } from 'esbuild'
@@ -11,6 +11,8 @@ import { build } from 'esbuild'
 const PLUGIN = dirname(dirname(fileURLToPath(import.meta.url)))
 const harness = process.env.DSH_HARNESS ?? join(PLUGIN, '..', 'deepseek-harness')
 const requireHarness = createRequire(join(harness, 'package.json'))
+const webApp = join(harness, 'packages/bundle/web-app/package.json')
+const requireClient = existsSync(webApp) ? createRequire(webApp) : requireHarness
 const { JSDOM } = requireHarness('jsdom')
 
 // The style helpers and the CSS they ship, bundled once with a minimal React for
@@ -43,7 +45,7 @@ const clientModules = (() => {
   globalThis.window = window
   window.__ModuleLoader__ = { load: (record) => { registration = record } }
   try {
-    requireHarness('@deepseek-ai/dsh-client-modules/client')
+    requireClient('@deepseek-ai/dsh-client-modules/client')
   } finally {
     globalThis.window = previousWindow
   }
