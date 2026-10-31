@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "hostVersion": "0.2.2-alpha.2.vh.1.local.20261031.1",
-  "pnpmVersion": "11.9.0",
+  "hostVersion": "0.2.2-alpha.2.vh.2.local.20261031.1",
+  "pnpmVersion": "11.28.5",
   "repository": "https://github.com/sophon2000/DS-Bot",
   "upstreamCommit": "4a7b55069ad300eae8be42a74f31bc170b40ead7"
 }

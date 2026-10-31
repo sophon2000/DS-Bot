@@ -1,6 +1,6 @@
 {
   "name": "ds-bot",
-  "version": "0.2.3-vh.4",
+  "version": "0.2.3-vh.5",
   "description": "DS Bot: a team of long-lived Bots for DeepSeek Harness, with Main Bots, Bot-to-Bot messages and group chats",
   "keywords": [
     "dsh-plugin",
@@ -54,9 +54,9 @@
   },
   "peerDependencies": {
     "@deepseek-ai/cordis": "4.0.6-alpha.1",
-    "@deepseek-ai/dsh-llm": "0.2.2-alpha.2.vh.1.local.20261031.1",
-    "@deepseek-ai/dsh-tools": "0.2.2-alpha.2.vh.1.local.20261031.1",
-    "@deepseek-ai/dsh-web": "0.2.2-alpha.2.vh.1.local.20261031.1"
+    "@deepseek-ai/dsh-llm": "0.2.2-alpha.2.vh.2.local.20261031.1",
+    "@deepseek-ai/dsh-tools": "0.2.2-alpha.2.vh.2.local.20261031.1",
+    "@deepseek-ai/dsh-web": "0.2.2-alpha.2.vh.2.local.20261031.1"
   },
   "dsh": {
     "client": {

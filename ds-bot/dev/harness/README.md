@@ -1,6 +1,6 @@
 # Default test Host
 
-This helper installs DSH `0.2.2-alpha.2.vh.1.local.20261031.1` and its exact
+This helper installs DSH `0.2.2-alpha.2.vh.2.local.20261031.1` and its exact
 Cordis/vendor cohort from the controlled fixed-artifact registry. It supplies
 the plugin's default unit-test and lint dependencies when `DSH_HARNESS` is not
 set. It does not load the retired application `engine/` or a sibling DSH source
@@ -14,6 +14,7 @@ env -u DSH_HARNESS npm test
 ```
 
 Keep strict peer resolution: the harness command sets `legacy-peer-deps=false`.
+The WebSocket transport override retains `ws@8.22.0` from the reviewed helper input.
 This helper retains its existing no-lock installation policy; the separate
 application has a checked-in npm lock. Its `postinstall` applies the canonical
 shared DSH3400 pi-ai `1.3.0` and node-pty `1.2.0-beta.15` patches through the

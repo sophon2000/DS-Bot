@@ -1,7 +1,7 @@
 # Video host package
 
-The current candidate is `ds-bot@0.2.3-vh.4`, targeting exact DSH
-`0.2.2-alpha.2.vh.1.local.20261031.1` and Cordis `4.0.6-alpha.1`. It combines
+The current candidate is `ds-bot@0.2.3-vh.5`, targeting exact DSH
+`0.2.2-alpha.2.vh.2.local.20261031.1` and Cordis `4.0.6-alpha.1`. It combines
 the retained upstream DS Bot `4a7b55069ad300eae8be42a74f31bc170b40ead7`, the
 new Host API adaptations, and fork `develop` commit
 `21b46e8e861747f3d839726c5f4f11006986b8c6`, including Bot-owned image fallback
@@ -11,7 +11,9 @@ or update DSH. Its producer derives the binding from the actual installed Host.
 The previous vh.2 archive targets DSH `0.2.1-rc.2.vh.11.local.20261026.1`.
 The vh.3 archive introduced the new Host binding before the latest fork image
 fallback fix was integrated. Both archives remain unchanged; their qualification
-does not transfer to vh.4.
+does not transfer to vh.5. The vh.4 archive and its source are also preserved;
+this successor targets DSH source `17eeb2094fea6e08067fdfd3ab34c3b44c4fdead`
+and requires fresh checks and producer receipts.
 
 The bundle mounts only `ds-bot`, with update checks disabled. The existing
 profile's web search provider is preserved. A new browser starts in Agent mode,
@@ -24,6 +26,10 @@ permissions.
 Image-to-text fallback belongs only to current Bot chat and group-member Sessions.
 Ordinary Host Sessions retain the Host's image-capability policy and do not trigger
 Bot OCR calls or cache writes when selecting a text-only model.
+
+The live feed owns its HTTP Request until the response stream closes. Abort,
+reader cancellation, slow-reader removal and plugin disposal release its abort
+subscription; garbage collection does not disconnect cancellation forwarding.
 
 Install build dependencies with `npm ci` in `ds-bot/`. The existing `.npmrc`
 disables peer auto-installation: tests consume an already installed DSH through
@@ -69,8 +75,10 @@ listeners (`listen EPERM`); these were the two mock-model tests and the
 credential-bearing redirect test. This is source migration evidence, pending
 checks against the installed immutable Host archive.
 
-The independent `app/` and its engine, and the default `dev/harness` installation
-recipe, still pin official DSH `0.2.1-rc.2`. They are separate consumers and are
-not upgraded or qualified by this Video plugin artifact. Test this candidate with
-an explicit `DSH_HARNESS` bound to the installed immutable new Host, including the
-CLI and Web bundle peers; do not infer new Host coverage from those older defaults.
+The active `app/` and default `dev/harness` installation recipe target this same
+exact Host cohort, with the complete fixed vendor pins and both canonical shared
+runtime patches. The historical `app/engine` experiment is retired and is neither
+installed nor qualified. App/helper checks and platform packaging remain separate
+from this Video plugin artifact's qualification. Test this candidate with an
+explicit `DSH_HARNESS` bound to the installed immutable new Host, including the
+CLI and Web bundle peers; do not infer consumer coverage from a source build.

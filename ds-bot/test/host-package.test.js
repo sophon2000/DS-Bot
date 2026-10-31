@@ -7,7 +7,7 @@ import { test } from 'node:test'
 import { create } from 'tar'
 import { inspectHost, packedFileDigests, verifyHostPackage } from '../scripts/host-package.mjs'
 
-const hostVersion = '0.2.2-alpha.2.vh.1.local.20261031.1'
+const hostVersion = '0.2.2-alpha.2.vh.2.local.20261031.1'
 const peers = { '@deepseek-ai/cordis': '4.0.6-alpha.1', '@deepseek-ai/dsh-llm': hostVersion, '@deepseek-ai/dsh-tools': hostVersion, '@deepseek-ai/dsh-web': hostVersion }
 function fixture(t) {
   const root = mkdtempSync(join(tmpdir(), 'ds-bot host 中文 '))

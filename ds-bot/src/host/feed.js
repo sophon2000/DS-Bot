@@ -18,18 +18,18 @@ const MAX_QUEUED = 512
 export function install(rt) {
   const { ctx, state } = rt
   const encoder = new TextEncoder()
-  /** @type {Set<ReadableStreamDefaultController<Uint8Array>>} */
-  const clients = new Set()
+  /** @type {Map<ReadableStreamDefaultController<Uint8Array>, () => void>} */
+  const clients = new Map()
   const send = (controller, chunk) => {
     if ((controller.desiredSize ?? 0) < -MAX_QUEUED) {
       leave(controller)
       return
     }
-    try { controller.enqueue(chunk) } catch { clients.delete(controller) }
+    try { controller.enqueue(chunk) } catch { leave(controller) }
   }
   const publish = (event, data) => {
     const chunk = encoder.encode(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`)
-    for (const controller of clients) send(controller, chunk)
+    for (const controller of clients.keys()) send(controller, chunk)
   }
 
   rt.stateSaved = () => {
@@ -77,7 +77,9 @@ export function install(rt) {
   })
 
   const leave = (controller) => {
+    const release = clients.get(controller)
     clients.delete(controller)
+    release?.()
     if (clients.size === 0) writing.clear()
     try { controller.close() } catch { /* already closed or errored */ }
   }
@@ -87,29 +89,34 @@ export function install(rt) {
     methods: ['GET'],
     requestBody: 'buffered',
     fetch: async (request) => {
+      const signal = request.signal
       let controller
+      const onAbort = () => leave(controller)
+      // Retain the Request and release its abort listener with the stream.
+      const release = () => request.signal.removeEventListener('abort', onAbort)
       const body = new ReadableStream({
         start(own) {
           controller = own
-          clients.add(own)
+          clients.set(own, release)
+          signal.addEventListener('abort', onAbort, { once: true })
+          if (signal.aborted) { leave(own); return }
           send(own, encoder.encode(`event: hello\ndata: ${JSON.stringify({ revision: state.revision })}\n\n`))
         },
         cancel() { leave(controller) },
       })
-      request.signal.addEventListener('abort', () => leave(controller), { once: true })
       return new Response(body, { status: 200, headers: { 'content-type': 'text/event-stream; charset=utf-8', 'cache-control': 'no-store' } })
     },
   }), 'ds-bot: live feed route')
 
   ctx.effect(() => {
     const keepalive = setInterval(() => {
-      if (clients.size > 0) for (const controller of clients) send(controller, encoder.encode(': keepalive\n\n'))
+      if (clients.size > 0) for (const controller of clients.keys()) send(controller, encoder.encode(': keepalive\n\n'))
     }, KEEPALIVE_MS)
     keepalive.unref?.()
     return () => {
       clearInterval(keepalive)
       clearTimeout(liveTimer)
-      for (const controller of clients) leave(controller)
+      for (const controller of clients.keys()) leave(controller)
     }
   }, 'ds-bot: live feed')
 }
