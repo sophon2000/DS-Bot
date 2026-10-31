@@ -2,6 +2,7 @@
 // (npmRebuild: false), so they fit only the architecture of the Node that ran npm. An app built for
 // another architecture would carry them and not start, so such a build stops here.
 import { Arch } from 'electron-builder'
+import { verifyHostSharedPatch } from '../src/host-shared-patch.mjs'
 
 const WHERE = {
   darwin: { x64: 'on an Intel Mac, or under Rosetta with an x64 Node', arm64: 'on a Mac with Apple silicon' },
@@ -23,4 +24,5 @@ export async function beforePack(context) {
     for (const arch of archToNames.keys()) targets.push(Arch[arch])
   const problem = archProblem({ target: Arch[context.arch], platform: context.electronPlatformName, targets })
   if (problem !== undefined) throw new Error(problem)
+  verifyHostSharedPatch(new URL('../package.json', import.meta.url))
 }

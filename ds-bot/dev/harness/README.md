@@ -15,7 +15,12 @@ env -u DSH_HARNESS npm test
 
 Keep strict peer resolution: the harness command sets `legacy-peer-deps=false`.
 This helper retains its existing no-lock installation policy; the separate
-application has a checked-in npm lock. The pi-ai `1.3.0` override matches the
-application's source integration and does not apply the Video Runtime SDK's
-separate streamed-argument patch. Passing source tests does not qualify an
+application has a checked-in npm lock. Its `postinstall` applies the canonical
+shared DSH3400 pi-ai `1.3.0` and node-pty `1.2.0-beta.15` patches through the
+application's scoped Node installer. Its byte-bound policy copy verifies that
+both shared entries are covered.
+If scripts were disabled, run `npm --prefix dev/harness run patch:host` from
+`ds-bot/`. The default test loader verifies the patched byte hashes before
+loading DSH; it never changes an external `DSH_HARNESS` installation. Passing
+source tests does not qualify an
 Electron installer, model provider, or native platform release.

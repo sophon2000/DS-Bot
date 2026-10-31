@@ -19,7 +19,15 @@
     "check-lifecycle": "node scripts/check-lifecycle.mjs",
     "shot": "node scripts/shot.mjs",
     "icon": "node scripts/icon.mjs",
-    "test": "node --test \"test/*.test.mjs\""
+    "test": "node --test \"test/*.test.mjs\"",
+    "postinstall": "node src/host-shared-patch.mjs",
+    "patch:host": "node src/host-shared-patch.mjs",
+    "check:host-patch": "node src/host-shared-patch.mjs --check",
+    "prebuild": "npm run check:host-patch",
+    "prestart": "npm run check:host-patch",
+    "pretest": "npm run check:host-patch",
+    "prepack": "npm run check:host-patch",
+    "predist": "npm run check:host-patch"
   },
   "dependencies": {
     "@deepseek-ai/cordis-plugin-group": "1.0.6-alpha.1",

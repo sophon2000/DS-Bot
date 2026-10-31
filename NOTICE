@@ -19,6 +19,18 @@ MIT License, Copyright (c) 2026 DeepSeek
     shutdown messages.
   - app/src/host-process.mjs follows apps/desktop/src/host-process.ts: the
     Host in Electron's Node mode and the shutdown escalation.
+  - app/src/patches/pi-ai-1.3.0.patch is the unchanged shared runtime patch
+    from patches/@earendil-works__pi-ai@1.3.0.patch in the maintained DSH fork
+    (https://github.com/sophon2000/deepseek-harness), commit
+    3400c4a11043fbd0ab486561edc23d6309f41463. It defers streamed tool arguments
+    until completion and preserves Gemini thought signatures. Its MIT notice
+    is also retained in app/src/patches/DSH-LICENSE.txt.
+  - app/src/patches/node-pty-1.2.0-beta.15.patch and
+    app/src/patches/dsh-runtime-patch-policy.txt are copied unchanged from the
+    same DSH commit: patches/node-pty@1.2.0-beta.15.patch and
+    packages/sdk/desktop-runtime-contract/tooling/runtime-patch-policy.ts.
+    They retain the owned-helper and Windows output-draining fixes and the
+    complete shared-patch selection policy.
   - app/src/main.mjs follows apps/desktop/src/main.ts for the Windows window
     options (the caption-button overlay, its colors and the native theme). app/src/preload.cjs adapts
     apps/desktop/src/preload-windows.ts, apps/desktop/src/preload-platform.ts

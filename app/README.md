@@ -10,6 +10,12 @@ node node_modules/electron/install.js   # when npm did not download Electron (no
 npm start                               # starts the app
 ```
 
+The app's `postinstall` applies both canonical shared runtime patches from
+DSH commit `3400c4a11043fbd0ab486561edc23d6309f41463`. An installation made with
+`--ignore-scripts` must run `npm run patch:host` explicitly. Build, pack, tests
+and Host startup verify the exact patched bytes and stop on an unpatched,
+partially patched or locally modified dependency; do not bypass that check.
+
 When GitHub downloads are slow, set `ELECTRON_MIRROR=https://npmmirror.com/mirrors/electron/` before the Electron download. Unset `ELECTRON_RUN_AS_NODE` before `npm start` if your terminal has it (terminals inside some Electron-based editors do): with it, Electron runs as plain Node and the app does not start.
 
 npm installs `ds-bot` from `../ds-bot` as a copy of its package files (`install-links` in `.npmrc`), so the app runs the plugin of this checkout. Run `npm ci` again after you change `ds-bot` or merge a branch that changes it: while the version stays the same, `npm install` keeps the old copy. `overrides` pins the complete vendor cohort and the plugin's DSH peers, including Cordis `4.0.6-alpha.1` and pi-ai `1.3.0`. The checked-in application lock must resolve one matching Host family; do not bypass a conflict with legacy peer installation or force.
@@ -48,9 +54,18 @@ It does not load a sibling DSH checkout or an older second Host. Existing plugin
 archives retain their frozen source identities even when application-only source
 advances after that release checkpoint.
 
-This npm application's pi-ai `1.3.0` version pin does not apply the separate
-Runtime SDK's streamed-argument patch. Source, profile and dependency checks here
-are separate from qualification of the patched Video Runtime SDK. New installers,
+The application and default test helper cover every `shared` entry in DSH's
+frozen runtime patch policy. pi-ai `1.3.0` defers streamed tool argument parsing
+and preserves Gemini thought signatures; node-pty `1.2.0-beta.15` supports the
+owned external spawn helper and starts Windows output draining during disposal.
+Canonical patch SHA-256 values are `4e1c90fd00aea42989664504668633033c1962e53c07860901edb4f72d843765`
+and `9d30053266d0f39d3debe894c675867f6782da6bcadbc94a693b3cfb9eff8ed0`.
+Source, original npm SRIs and all eight before/after file hashes are recorded in
+`src/patches/shared-runtime.json`. The installer preflights every file, uses no global
+store or external patch command, and accepts a repeated application without
+changing already patched bytes. This supersedes the earlier plain-version-pin
+source checkpoint. Source and profile checks remain separate from qualification
+of a packaged Video Runtime SDK. New installers,
 graphical startup, signing, updates and native Windows/Linux operation require
 new platform-specific acceptance; prior application qualification is not reused.
 

@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "repository": "https://github.com/sophon2000/deepseek-harness",
+    "commit": "3400c4a11043fbd0ab486561edc23d6309f41463",
+    "runtimePatchPolicy": "packages/sdk/desktop-runtime-contract/tooling/runtime-patch-policy.ts",
+    "runtimePatchPolicySha256": "c5cdf2ecbe4066b09c43eca108789a9be8989c6b2abcc49a586b7915f8ff0b24",
+    "license": "MIT"
+  },
+  "patches": [
+    {
+      "file": "pi-ai-1.3.0.patch",
+      "canonicalPatch": "patches/@earendil-works__pi-ai@1.3.0.patch",
+      "patchSha256": "4e1c90fd00aea42989664504668633033c1962e53c07860901edb4f72d843765",
+      "package": {
+        "name": "@earendil-works/pi-ai",
+        "version": "1.3.0",
+        "integrity": "sha512-KaBI8x7q7sPoFUXICNGD9efHzDG+oRNwVvkA9jdIsSQWH1RjFssOlEGsbLtewUPPgCrvmz0l2KTgSLXTyj3acw==",
+        "manifestLicense": "MIT",
+        "main": "./dist/index.js",
+        "importEntry": "./dist/index.js",
+        "lookupAnchors": [
+          "@deepseek-ai/dsh-llm-pi-ai"
+        ]
+      },
+      "before": {
+        "dist/api/anthropic-messages.js": "2a61739aa1e42d42c0351f10fef371b3efd544bc746a97cf6d6f68e4dfc0ef96",
+        "dist/api/bedrock-converse-stream.js": "6ff824a3cda4d34fb18c31a190b5a966b8660d7be3da0bd9e1b419ec6bc4c455",
+        "dist/api/mistral-conversations.js": "14e0acba42f00bcb317ce5d4e1cff40f9e267b047d08b608d3a2e2eb92f9a4f4",
+        "dist/api/openai-completions.js": "4b3875e5ec18c5e2d06ce12409feb2554563fd2c392a5c1773af968b265e2bea",
+        "dist/api/openai-responses-shared.js": "aff96f7cf1bbb4ffb1a9c2366620dfbedaa5e8b667a0c5f89d726428e3006d77",
+        "dist/api/pi-messages.js": "33cd3a7adc48775c88474d3c68b51f33791dc6e5b315ab9f3a8fc67eee4d8696"
+      },
+      "after": {
+        "dist/api/anthropic-messages.js": "b65f40610f7c2d3120eeaa36512c0e3db37a93e6ba3a9baf6650294785880de0",
+        "dist/api/bedrock-converse-stream.js": "b4f6043bdbb061c86834106161ee859126bdba046d0a64fcac9f14c03924276a",
+        "dist/api/mistral-conversations.js": "b7a0c5ec6010b37efeaacf7d4d53b98a981b54e8c385e5f4d73e13af7998006b",
+        "dist/api/openai-completions.js": "f5cf6982b703ef0af515d3c61926cd861ff17feeea3229522bf97bcd88d93b76",
+        "dist/api/openai-responses-shared.js": "919b1dbf276ab8805f6ce26bfe389da189711dad8f79354534091d2225e6d25a",
+        "dist/api/pi-messages.js": "016917962a1286e8e2a2db45b7bec4d8cc4fec30a70afca20297bb0f4212131a"
+      }
+    },
+    {
+      "file": "node-pty-1.2.0-beta.15.patch",
+      "canonicalPatch": "patches/node-pty@1.2.0-beta.15.patch",
+      "patchSha256": "9d30053266d0f39d3debe894c675867f6782da6bcadbc94a693b3cfb9eff8ed0",
+      "package": {
+        "name": "node-pty",
+        "version": "1.2.0-beta.15",
+        "integrity": "sha512-vORSzHXi4Ofl7HemVWpuudLqCPdaQb4LfpRCUpE5HPxhp4JYscl8zZwxh11p26v2wvW24WMwnMfLjhRLixrfxA==",
+        "main": "./lib/index.js",
+        "lookupAnchors": [
+          "@deepseek-ai/dsh-terminal",
+          "@deepseek-ai/dsh-subprocess-local"
+        ]
+      },
+      "before": {
+        "lib/unixTerminal.js": "63b605fb25c4e6d237493cd1799b01a8d880d89c78850108aae1853d04b4cdf0",
+        "lib/windowsPtyAgent.js": "4f503c377b11cbd113e1f32b3932fdc35e8132b0e647f4c6b70dc84224127c53"
+      },
+      "after": {
+        "lib/unixTerminal.js": "23d8ae86eaf44c44c8cc30aaaacd335c9388dfeb9de1d8370dfa851077e83305",
+        "lib/windowsPtyAgent.js": "00a93c3ad068e3fc14b516ceea9f707b6dd6667532b6cefcd237eb2078dd42bf"
+      }
+    }
+  ]
+}

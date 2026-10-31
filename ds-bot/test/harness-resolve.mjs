@@ -31,6 +31,10 @@ const findHarness = () => {
   }
 }
 const harness = findHarness()
+if (harness === installed) {
+  const { verifyHostSharedPatch } = await import('../../app/src/host-shared-patch.mjs')
+  verifyHostSharedPatch(join(harness, 'package.json'))
+}
 // Tests that load other harness packages (jsdom) read the same checkout.
 process.env.DSH_HARNESS = harness
 // A checkout links the packages into its base bundle; an npm install has them at its root.

@@ -9,6 +9,7 @@ import { runProfile } from '@deepseek-ai/dsh/profile-boot'
 import { CHECK_PROFILE, INSTALL_ANCHOR, loadAppProfile, loadCheckProfile, PROFILE } from './profile.mjs'
 import { reconcileSearchSelector } from './search-patch.mjs'
 import { unreadableSessions } from './session-check.mjs'
+import { verifyHostSharedPatch } from './host-shared-patch.mjs'
 
 const MAX_FATAL_DIAGNOSTIC_CHARS = 64 * 1024
 
@@ -18,6 +19,7 @@ const send = (message) => new Promise((resolve, reject) => {
 })
 
 async function main() {
+  verifyHostSharedPatch(INSTALL_ANCHOR)
   const pnpm = process.argv[2]
   const check = process.env.DS_BOT_CHECK || undefined
   const profile = check === undefined ? loadAppProfile() : loadCheckProfile()
