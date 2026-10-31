@@ -53,7 +53,9 @@ async function main() {
   // A profile patch can turn these rows off; then the window has nothing to talk to.
   if (webServer === undefined || connection === undefined) throw new Error(`The profile in ${profile.dir} does not start the engine's web server and connection.`)
   const url = connection.authenticatedUrl(`http://127.0.0.1:${String(webServer.port)}`)
-  await send({ type: 'ready', url, injections: webServer.collectIndexInjections() })
+  // The window's authenticated index request admits its Peer and renders that Peer's
+  // injections. The shell only needs the URL; it cannot render a page without a Peer.
+  await send({ type: 'ready', url })
 }
 
 main().catch(async (error) => {

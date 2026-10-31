@@ -283,10 +283,19 @@ test('cancelling a relay download removes its save path', async t => {
   t.after(() => socket.close())
   await request(socket, 1, 'Target.attachToTarget', { targetId: entry.tabId, flatten: true })
   await request(socket, 2, 'Browser.setDownloadBehavior', { behavior: 'allowAndName', downloadPath })
-  const events = []
-  socket.on('message', raw => {
-    const message = JSON.parse(raw.toString())
-    if (message.method?.startsWith('Browser.download')) events.push(message)
+  const started = new Promise((resolve, reject) => {
+    const timer = setTimeout(() => {
+      socket.off('message', onMessage)
+      reject(new Error('Timed out waiting for Browser.downloadWillBegin'))
+    }, 1000)
+    const onMessage = raw => {
+      const message = JSON.parse(raw.toString())
+      if (message.method !== 'Browser.downloadWillBegin') return
+      clearTimeout(timer)
+      socket.off('message', onMessage)
+      resolve(message.params)
+    }
+    socket.on('message', onMessage)
   })
   let savePath
   const item = Object.assign(new EventEmitter(), {
@@ -298,8 +307,7 @@ test('cancelling a relay download removes its save path', async t => {
     async cancel() { this.emit('done', {}, 'cancelled') },
   })
   handlers.get('bot:a')({ preventDefault() {} }, item, views[0].webContents)
-  await new Promise(resolve => setTimeout(resolve, 0))
-  const guid = events.find(message => message.method === 'Browser.downloadWillBegin').params.guid
+  const { guid } = await started
   await request(socket, 3, 'Browser.cancelDownload', { guid })
   for (let tries = 0; tries < 100 && existsSync(savePath); tries++) await new Promise(resolve => setTimeout(resolve, 10))
   assert.equal(existsSync(savePath), false)

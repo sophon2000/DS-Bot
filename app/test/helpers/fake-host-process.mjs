@@ -41,7 +41,7 @@ export class HostProcess {
     state.starts += 1
     if (state.held) await gate
     if (state.fail) throw new Error('the Host did not start')
-    return { url: `http://127.0.0.1:${port()}/?token=test-token`, injections: [] }
+    return { url: `http://127.0.0.1:${port()}/?token=test-token` }
   }
 
   onMessage(listener) { this.#messageListeners.add(listener); return () => this.#messageListeners.delete(listener) }

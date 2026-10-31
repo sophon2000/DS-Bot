@@ -1,0 +1,21 @@
+# Default test Host
+
+This helper installs DSH `0.2.2-alpha.2.vh.1.local.20261031.1` and its exact
+Cordis/vendor cohort from the controlled fixed-artifact registry. It supplies
+the plugin's default unit-test and lint dependencies when `DSH_HARNESS` is not
+set. It does not load the retired application `engine/` or a sibling DSH source
+checkout.
+
+With the fixed-artifact registry available, install from `ds-bot/`:
+
+```sh
+npm run harness -- --registry=http://127.0.0.1:4875 '--@deepseek-ai:registry=http://127.0.0.1:4875'
+env -u DSH_HARNESS npm test
+```
+
+Keep strict peer resolution: the harness command sets `legacy-peer-deps=false`.
+This helper retains its existing no-lock installation policy; the separate
+application has a checked-in npm lock. The pi-ai `1.3.0` override matches the
+application's source integration and does not apply the Video Runtime SDK's
+separate streamed-argument patch. Passing source tests does not qualify an
+Electron installer, model provider, or native platform release.

@@ -1,6 +1,6 @@
 # DS Bot desktop app
 
-The Electron app for Windows, macOS and Linux. It installs a pinned DeepSeek Harness (DSH 0.2.1-rc.2) and the `ds-bot` plugin of this repository, boots its own DSH profile `ds-bot` through `@deepseek-ai/dsh/profile-boot`, and keeps its data in its own `DSH_HOME`. It never writes to `~/.dsh`. Its window shows DSH's Web front end with the plugin, as DSH Desktop does. The design is in [docs/plans/2026-10-16-desktop-app.md](../docs/plans/2026-10-16-desktop-app.md).
+The Electron app for Windows, macOS and Linux. It installs a pinned DeepSeek Harness (DSH `0.2.2-alpha.2.vh.1.local.20261031.1`) and the `ds-bot` plugin of this repository, boots its own DSH profile `ds-bot` through `@deepseek-ai/dsh/profile-boot`, and keeps its data in its own `DSH_HOME`. It never writes to `~/.dsh`. Its window shows DSH's Web front end with the plugin, as DSH Desktop does. The design is in [docs/plans/2026-10-16-desktop-app.md](../docs/plans/2026-10-16-desktop-app.md).
 
 ## Run
 
@@ -12,7 +12,7 @@ npm start                               # starts the app
 
 When GitHub downloads are slow, set `ELECTRON_MIRROR=https://npmmirror.com/mirrors/electron/` before the Electron download. Unset `ELECTRON_RUN_AS_NODE` before `npm start` if your terminal has it (terminals inside some Electron-based editors do): with it, Electron runs as plain Node and the app does not start.
 
-npm installs `ds-bot` from `../ds-bot` as a copy of its package files (`install-links` in `.npmrc`), so the app runs the plugin of this checkout. Run `npm ci` again after you change `ds-bot` or merge a branch that changes it: while the version stays the same, `npm install` keeps the old copy. `overrides` in `package.json` pins the four peer dependencies of `ds-bot` to the DSH version: they are declared as `*`, and npm does not choose a pre-release to satisfy `*`.
+npm installs `ds-bot` from `../ds-bot` as a copy of its package files (`install-links` in `.npmrc`), so the app runs the plugin of this checkout. Run `npm ci` again after you change `ds-bot` or merge a branch that changes it: while the version stays the same, `npm install` keeps the old copy. `overrides` pins the complete vendor cohort and the plugin's DSH peers, including Cordis `4.0.6-alpha.1` and pi-ai `1.3.0`. The checked-in application lock must resolve one matching Host family; do not bypass a conflict with legacy peer installation or force.
 
 | Variable | What it sets | Default |
 |---|---|---|
@@ -32,6 +32,27 @@ Both change later in DS Bot's Settings > General > Locations. The plugin moves t
 When the user's DSH (`DSH_HOME`, else `~/.dsh`) has a Bot team, the app offers to copy it (`src/import.mjs`). It only reads there. Before the copy it checks that no running DSH holds the team and that no chat is in a newer session format than the pinned DSH reads. Then the pinned DSH reads each chat once: a newer DSH can write records that the pinned one refuses in the same format. It reads a throwaway copy in the data location, with a profile of its own (`import-check`: `dsh-base` and `dsh-web-app`, without `ds-bot`), and removes the copy afterwards. A chat that a newer DSH wrote stops the copy as a newer format does; a damaged one does not, since the user's DSH cannot read it either. Then the app starts the Host once on the new data location, so that DSH does not register the copied Sessions' folders as projects. The copy takes `bot/` (without its lock, turns in flight and workspace), every Session the team names, the attachments, `.credentials.yaml`, `.env`, the model rows of one profile's `cordis.patch.yml`, and the old team workspace's files, which go into the new folder without replacing a file there. `bot/imported.json` records it. At its next turn, each Bot and group moves on to a fresh part in the new folder.
 
 The Host reads model settings and keys the way DSH does: environment variables such as `DEEPSEEK_API_KEY`, and `.env` and `.credentials.yaml` in the data location. DSH's settings in the window set up model providers and their keys; DSH keeps the providers in the profile's `cordis.patch.yml` and the keys in `.credentials.yaml`.
+
+## Fixed master Host source candidate
+
+This fork's active application and `ds-bot/dev/harness` now use the same fixed
+DSH family as the reviewed Video plugin archive. The source application continues
+to use the public `@deepseek-ai/dsh/profile-boot` entrypoint and its own temporary
+or application-owned profile. `engine/` remains a retired historical experiment;
+its old package manifest is not installed or covered by this new integration.
+
+The application uses its own npm lock and the controlled fixed-artifact registry
+for this local Host release. Its `ds-bot` dependency is a package-file copy from
+this same repository, with the source plugin version matching the application.
+It does not load a sibling DSH checkout or an older second Host. Existing plugin
+archives retain their frozen source identities even when application-only source
+advances after that release checkpoint.
+
+This npm application's pi-ai `1.3.0` version pin does not apply the separate
+Runtime SDK's streamed-argument patch. Source, profile and dependency checks here
+are separate from qualification of the patched Video Runtime SDK. New installers,
+graphical startup, signing, updates and native Windows/Linux operation require
+new platform-specific acceptance; prior application qualification is not reused.
 
 ## The profile
 
@@ -136,7 +157,7 @@ The launch URL of the Host is good for one use only. When the first load never c
 | `src/cookie-parse.mjs`, `src/cookie-import.mjs`, `src/browser-sources.mjs` | Cookie imports: the cookie-file parser (Cookie-Editor JSON, Netscape, Playwright storageState), the write into a Bot's partition with read-back and flush, and the installed-browser profiles a source is cloned from — the source browser itself decrypts its own store over a CDP pipe; values never leave the main process |
 | `src/window-frame.mjs`, `src/mica.css` | The frameless Windows window: the caption band, when Mica is available (Windows 11 22H2 and later), and the stylesheet that lets Mica through the sidebar |
 | `src/host-process.mjs` | Starts the Host in Electron's Node mode and owns its exit |
-| `src/host.mjs` | The Host: boots the profile with `runProfile()` and reports the launch URL and the page injections; for the first-run check (`DS_BOT_CHECK`), the chats it cannot read |
+| `src/host.mjs` | The Host: boots the profile with `runProfile()` and reports the authenticated launch URL; the authenticated page request renders its own Peer-scoped injections. For the first-run check (`DS_BOT_CHECK`), reports the chats it cannot read |
 | `src/profile.mjs` | The profiles: the app's own and the first-run check's, their bundles, and their creation and update |
 | `src/session-check.mjs` | Which chats the pinned DSH refuses because a newer DSH wrote them |
 | `src/first-run.mjs` | The first start's dialogs (the two folders and the offer to import) and the texts of the data move |
