@@ -1,10 +1,17 @@
-Current source candidate: `ds-bot@0.2.3-vh.3`, exact DSH `0.2.2-alpha.2.vh.1.local.20261031.1` and Cordis `4.0.6-alpha.1`. The archive must be regenerated and verified against that Host; earlier Host qualification is not reused.
-
 # Video host package
 
-This fork's `develop` branch carries the Video integration of upstream DS Bot
-`4a7b55069ad300eae8be42a74f31bc170b40ead7`. Package `0.2.3-vh.1` targets DSH
-`0.2.1-rc.2.vh.11.local.20261026.1`; it does not include or update DSH.
+The current candidate is `ds-bot@0.2.3-vh.4`, targeting exact DSH
+`0.2.2-alpha.2.vh.1.local.20261031.1` and Cordis `4.0.6-alpha.1`. It combines
+the retained upstream DS Bot `4a7b55069ad300eae8be42a74f31bc170b40ead7`, the
+new Host API adaptations, and fork `develop` commit
+`21b46e8e861747f3d839726c5f4f11006986b8c6`, including Bot-owned image fallback
+and manually dispatched release automation. The plugin archive does not include
+or update DSH. Its producer derives the binding from the actual installed Host.
+
+The previous vh.2 archive targets DSH `0.2.1-rc.2.vh.11.local.20261026.1`.
+The vh.3 archive introduced the new Host binding before the latest fork image
+fallback fix was integrated. Both archives remain unchanged; their qualification
+does not transfer to vh.4.
 
 The bundle mounts only `ds-bot`, with update checks disabled. The existing
 profile's web search provider is preserved. A new browser starts in Agent mode,
@@ -13,6 +20,10 @@ where the host's workspace and conversation UI remain visible. The sidebar's
 uses DS Bot's own sidebar and conversation UI. Bot sessions retain the upstream
 standard preset; selecting a working directory does not grant Video project
 permissions.
+
+Image-to-text fallback belongs only to current Bot chat and group-member Sessions.
+Ordinary Host Sessions retain the Host's image-capability policy and do not trigger
+Bot OCR calls or cache writes when selecting a text-only model.
 
 Install build dependencies with `npm ci` in `ds-bot/`. The existing `.npmrc`
 disables peer auto-installation: tests consume an already installed DSH through
@@ -50,10 +61,16 @@ The artifact is reproducible from the same clean commit, fixed pnpm and installe
 host packages. The release archive is published separately after integration
 tests; a package receipt alone does not certify live-model or UI behavior.
 
-Candidate source checks on 2026-10-31 used the built master-upgrade checkout:
+Historical vh.3 source checks on 2026-10-31 used the built master-upgrade checkout:
 `build-client --check`, lint, the five host-package tests and all 26 tests in
 the four migrated Host API suites passed. The full suite reported 1125 passed,
 2 skipped and 3 blocked by this execution environment rejecting local HTTP
 listeners (`listen EPERM`); these were the two mock-model tests and the
 credential-bearing redirect test. This is source migration evidence, pending
 checks against the installed immutable Host archive.
+
+The independent `app/` and its engine, and the default `dev/harness` installation
+recipe, still pin official DSH `0.2.1-rc.2`. They are separate consumers and are
+not upgraded or qualified by this Video plugin artifact. Test this candidate with
+an explicit `DSH_HARNESS` bound to the installed immutable new Host, including the
+CLI and Web bundle peers; do not infer new Host coverage from those older defaults.

@@ -180,7 +180,8 @@ export function install(rt) {
     if (options.sessionId === undefined || rt.ownRequest(options) || !(options.messages ?? []).some(liveImages)) return next()
     return (async function* imagesAsTextOrPass() {
       await rt.load()
-      if (rt.roomOf(options.sessionId) !== undefined || await readsImages(options.provider, options.model)) {
+      // Ordinary Host Sessions keep the Host's image-capability policy.
+      if (!rt.isBotSession(options.sessionId) || rt.roomOf(options.sessionId) !== undefined || await readsImages(options.provider, options.model)) {
         yield* next()
         return
       }
